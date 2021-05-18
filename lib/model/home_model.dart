@@ -1,23 +1,29 @@
+//config	Object	NonNull
+//bannerList	Array	NonNull
+//localNavList	Array	NonNull
+//gridNav	Object	NonNull
+//subNavList	Array	NonNull
+//salesBox	Object	NonNull
 import 'package:flutter_trip/model/common_model.dart';
 import 'package:flutter_trip/model/config_model.dart';
 import 'package:flutter_trip/model/grid_nav_model.dart';
 import 'package:flutter_trip/model/sales_box_model.dart';
 
 class HomeModel {
-  // final ConfigModel config;
-  // final List<CommonModel> bannerList;
-  //final List<CommonModel> localNavList;
-  //final List<CommonModel> subNavList;
-  //final GridNavModel gridNav;
-  //final SalesBoxModel salesBox;
+  final ConfigModel config;
+  final List<CommonModel> bannerList;
+  final List<CommonModel> localNavList;
+  final List<CommonModel> subNavList;
+  final GridNavModel gridNav;
+  final SalesBoxModel salesBox;
 
   HomeModel(
-      {ConfigModel? config,
-      List<CommonModel>? bannerList,
-      List<CommonModel>? localNavList,
-      List<CommonModel>? subNavList,
-      GridNavModel? gridNav,
-      SalesBoxModel? salesBox});
+      {this.config,
+      this.bannerList,
+      this.localNavList,
+      this.subNavList,
+      this.gridNav,
+      this.salesBox});
 
   factory HomeModel.fromJson(Map<String, dynamic> json) {
     var localNavListJson = json['localNavList'] as List;
@@ -33,11 +39,12 @@ class HomeModel {
         subNavListJson.map((i) => CommonModel.fromJson(i)).toList();
 
     return HomeModel(
-        localNavList: localNavList,
-        bannerList: bannerList,
-        subNavList: subNavList,
-        config: ConfigModel.fromJson(json['config']),
-        gridNav: GridNavModel.fromJson(json['gridNav']),
-        salesBox: SalesBoxModel.fromJson(json['saleBox']));
+      localNavList: localNavList,
+      bannerList: bannerList,
+      subNavList: subNavList,
+      config: ConfigModel.fromJson(json['config']),
+      gridNav: GridNavModel.fromJson(json['gridNav']),
+      salesBox: SalesBoxModel.fromJson(json['salesBox']),
+    );
   }
 }
