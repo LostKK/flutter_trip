@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_trip/model/common_model.dart';
 import 'package:flutter_trip/model/grid_nav_model.dart';
+import 'package:flutter_trip/util/navigator_util.dart';
 import 'package:flutter_trip/widget/webview.dart';
 
 class GridNav extends StatelessWidget {
@@ -10,21 +11,32 @@ class GridNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: _gridNavItems(context),
+    return PhysicalModel(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(6),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: _gridNavItems(context),
+      ),
     );
   }
 
   _gridNavItems(BuildContext context) {
     List<Widget> items = [];
     if (gridNavModel == null) return items;
-    if (gridNavModel.hotel != null) {}
-    if (gridNavModel.flight != null) {}
-    if (gridNavModel.travel != null) {}
+    if (gridNavModel.hotel != null) {
+      items.add(_gridNavItem(context, gridNavModel.hotel, true));
+    }
+    if (gridNavModel.flight != null) {
+      items.add(_gridNavItem(context, gridNavModel.flight, false));
+    }
+    if (gridNavModel.travel != null) {
+      items.add(_gridNavItem(context, gridNavModel.travel, false));
+    }
+    return items;
   }
 
-  _gridNavItemsSingle(
-      BuildContext context, GridNavItem gridNavItem, bool first) {
+  _gridNavItem(BuildContext context, GridNavItem gridNavItem, bool first) {
     List<Widget> items = [];
     items.add(_mainItem(context, gridNavItem.mainItem));
     items.add(_doubleItem(context, gridNavItem.item1, gridNavItem.item2));
@@ -41,7 +53,9 @@ class GridNav extends StatelessWidget {
       decoration: BoxDecoration(
           //线性渐变
           gradient: LinearGradient(colors: [startColor, endColor])),
-      // TODO
+      child: Row(
+        children: expandItems,
+      ),
     );
   }
 
@@ -49,6 +63,7 @@ class GridNav extends StatelessWidget {
     return _wrapGesture(
         context,
         Stack(
+          alignment: AlignmentDirectional.topCenter,
           children: <Widget>[
             Image.network(
               model.icon,
@@ -57,9 +72,12 @@ class GridNav extends StatelessWidget {
               width: 121,
               alignment: AlignmentDirectional.bottomEnd,
             ),
-            Text(
-              model.title,
-              style: TextStyle(fontSize: 14, color: Colors.white),
+            Container(
+              margin: EdgeInsets.only(top: 11),
+              child: Text(
+                model.title,
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
             )
           ],
         ),
@@ -95,10 +113,12 @@ class GridNav extends StatelessWidget {
         child: Center(
             child: _wrapGesture(
                 context,
-                Text(
-                  item.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                Center(
+                  child: Text(
+                    item.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
                 ),
                 item)),
       ),
@@ -108,16 +128,16 @@ class GridNav extends StatelessWidget {
   _wrapGesture(BuildContext context, Widget widget, CommonModel model) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        NavigatorUtil.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => WebView(
-                      url: model.url,
-                      statusBarColor: model.statusBarColor,
-                      title: model.title,
-                      hideAppBar: model.hideAppBar,
-                    )));
+            WebView(
+              url: model.url,
+              statusBarColor: model.statusBarColor,
+              title: model.title,
+              hideAppBar: model.hideAppBar,
+            ));
       },
+      child: widget,
     );
   }
 }
