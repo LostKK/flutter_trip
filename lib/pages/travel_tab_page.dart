@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_trip/dao/travel_dao.dart';
 import 'package:flutter_trip/model/travel_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_trip/util/navigator_util.dart';
+import 'package:flutter_trip/widget/webview.dart';
 
 const _TRAVEL_URL =
     'https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2?_fxpcqlniredt=09031014111431397988&__gw_appid=99999999&__gw_ver=1.0&__gw_from=10650013707&__gw_platform=H5';
@@ -88,8 +90,66 @@ class _TravelItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('123'),
+    return GestureDetector(
+      onTap: () {
+        if (item.article.urls != null && item.article.urls.length > 0) {
+          NavigatorUtil.push(
+              context,
+              WebView(
+                url: item.article.urls[0].h5Url,
+                title: '详情',
+              ));
+        }
+      },
+      child: Card(
+        child: PhysicalModel(
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          borderRadius: BorderRadius.circular(5),
+          child: Column(
+            children: <Widget>[_itemImage()],
+          ),
+        ),
+      ),
     );
+  }
+
+  _itemImage() {
+    return Stack(
+      children: <Widget>[
+        Image.network(item.article.images[0]?.dynamicUrl),
+        Positioned(
+            bottom: 8,
+            left: 8,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+              decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 3),
+                    child: Icon(
+                      Icons.location_on,
+                      color: Colors.white,
+                      size: 12,
+                    ),
+                  ),
+                  LimitedBox(
+                    maxWidth: 130,
+                    child: Text(_poiName()),
+                  )
+                ],
+              ),
+            ))
+      ],
+    );
+  }
+
+  String _poiName() {
+    return item.article.pois == null || item.article.pois.length == 0
+        ? '未知'
+        : item.article.pois[0]?.poiName ?? '未知';
   }
 }
