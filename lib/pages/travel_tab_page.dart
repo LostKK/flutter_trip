@@ -5,15 +5,15 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 const _TRAVEL_URL =
     'https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2?_fxpcqlniredt=09031014111431397988&__gw_appid=99999999&__gw_ver=1.0&__gw_from=10650013707&__gw_platform=H5';
+
 const PAGE_SIZE = 10;
 
 class TravelTabPage extends StatefulWidget {
   final String travelUrl;
   final Map params;
   final String groupChannelCode;
-
   const TravelTabPage(
-      {Key key, this.travelUrl, this.groupChannelCode, this.params})
+      {Key key, this.travelUrl, this.params, this.groupChannelCode})
       : super(key: key);
 
   @override
@@ -23,10 +23,12 @@ class TravelTabPage extends StatefulWidget {
 class _TravelTabPageState extends State<TravelTabPage> {
   List<TravelItem> travelItems;
   int pageIndex = 1;
-  int pageSize = 10;
 
   @override
-  void initState() {}
+  void initState() {
+    _loadData();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -47,8 +49,8 @@ class _TravelTabPageState extends State<TravelTabPage> {
   }
 
   void _loadData() {
-    TravelDao.fetch(widget.travelUrl ?? _TRAVEL_URL, widget.params,
-            widget.groupChannelCode, pageIndex, pageSize)
+    TravelDao.fetch(widget.travelUrl ?? _TRAVEL_URL, widget.params ?? {},
+            widget.groupChannelCode, pageIndex, PAGE_SIZE)
         .then((TravelItemModel model) {
       setState(() {
         List<TravelItem> items = _filterItems(model.resultList);

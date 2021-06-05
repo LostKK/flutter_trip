@@ -8,10 +8,10 @@ import 'package:http/http.dart' as http;
 
 var Params = {
   "districtId": -1,
-  "groupChannelCode": "RX-OMF",
-  "type": null,
-  "lat": -180,
-  "lon": -180,
+  "groupChannelCode": "tourphoto_global1",
+  "type": 1,
+  "lat": 34.035243900000005,
+  "lon": -118.25220709999999,
   "locatedDistrictId": 0,
   "pagePara": {
     "pageIndex": 1,
@@ -20,7 +20,19 @@ var Params = {
     "sortDirection": 0
   },
   "imageCutType": 1,
-  "head": {'cid': "09031014111431397988"},
+  "head": {
+    "cid": "09031110214384579588",
+    "ctok": "",
+    "cver": "1.0",
+    "lang": "01",
+    "sid": "8888",
+    "syscode": "09",
+    "auth": null,
+    "extension": [
+      {"name": "tecode", "value": "h5"},
+      {"name": "protocal", "value": "https"}
+    ]
+  },
   "contentType": "json"
 };
 
