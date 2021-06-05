@@ -22,7 +22,8 @@ class TravelTabPage extends StatefulWidget {
   _TravelTabPageState createState() => _TravelTabPageState();
 }
 
-class _TravelTabPageState extends State<TravelTabPage> {
+class _TravelTabPageState extends State<TravelTabPage>
+    with AutomaticKeepAliveClientMixin {
   List<TravelItem> travelItems;
   int pageIndex = 1;
 
@@ -80,6 +81,9 @@ class _TravelTabPageState extends State<TravelTabPage> {
     });
     return filterItems;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _TravelItem extends StatelessWidget {
@@ -107,7 +111,20 @@ class _TravelItem extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           borderRadius: BorderRadius.circular(5),
           child: Column(
-            children: <Widget>[_itemImage()],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _itemImage(),
+              Container(
+                padding: EdgeInsets.all(4),
+                child: Text(
+                  item.article.articleTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                ),
+              ),
+              _infoText()
+            ],
           ),
         ),
       ),
@@ -138,7 +155,12 @@ class _TravelItem extends StatelessWidget {
                   ),
                   LimitedBox(
                     maxWidth: 130,
-                    child: Text(_poiName()),
+                    child: Text(
+                      _poiName(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
                   )
                 ],
               ),
@@ -151,5 +173,56 @@ class _TravelItem extends StatelessWidget {
     return item.article.pois == null || item.article.pois.length == 0
         ? '未知'
         : item.article.pois[0]?.poiName ?? '未知';
+  }
+
+  _infoText() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(6, 0, 6, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              PhysicalModel(
+                color: Colors.transparent,
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  item.article.author?.coverImage?.dynamicUrl,
+                  width: 24,
+                  height: 24,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(5),
+                width: 90,
+                child: Text(
+                  item.article.author?.nickName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12),
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.thumb_up,
+                size: 14,
+                color: Colors.grey,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 3),
+                child: Text(
+                  item.article.likeCount.toString(),
+                  style: TextStyle(fontSize: 10),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
