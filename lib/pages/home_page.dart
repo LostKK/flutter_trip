@@ -125,10 +125,6 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
           child: SalesBox(salesBox: salesBoxModel),
         ),
-        Container(
-          height: 800,
-          child: ListTile(title: Text(resultString)),
-        )
       ],
     );
   }
